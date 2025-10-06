@@ -2,8 +2,9 @@ import { useState, useRef, useEffect } from "react"
 import Die from "./Die"
 import { nanoid } from "nanoid"
 import Confetti from "react-confetti"
+import type { JSX } from "react"
 
-export default function App() {
+export default function App(): JSX.Element {
     const [dice, setDice] = useState(() => generateAllNewDice())
     const buttonRef = useRef(null)
 
@@ -38,7 +39,7 @@ export default function App() {
         }
     }
 
-    function hold(id) {
+    function hold(id): void {
         setDice(oldDice => oldDice.map(die =>
             die.id === id ?
                 { ...die, isHeld: !die.isHeld } :
