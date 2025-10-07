@@ -4,32 +4,38 @@ import { nanoid } from "nanoid"
 import Confetti from "react-confetti"
 import type { JSX } from "react"
 
-export default function App(): JSX.Element {
-    const [dice, setDice] = useState(() => generateAllNewDice())
-    const buttonRef = useRef(null)
+type Dice = {
+    value: number;
+    isHeld: boolean;
+    id: string;
+}
 
-    const gameWon = dice.every(die => die.isHeld) &&
-        dice.every(die => die.value === dice[0].value)
+export default function App(): JSX.Element {
+    const [dice, setDice] = useState<Dice[]>(() : Dice[]=> generateAllNewDice())
+    const buttonRef = useRef<HTMLButtonElement | null>(null)
+
+    const gameWon: boolean = dice.every((die: Dice): boolean => die.isHeld) &&
+        dice.every((die: Dice): boolean => die.value === dice[0].value)
         
-    useEffect(() => {
+    useEffect((): void => {
         if (gameWon) {
-            buttonRef.current.focus()
+            buttonRef.current?.focus()
         }
     }, [gameWon])
 
-    function generateAllNewDice() {
+    function generateAllNewDice(): Dice[] {
         return new Array(10)
             .fill(0)
-            .map(() => ({
+            .map((): Dice => ({
                 value: Math.ceil(Math.random() * 6),
                 isHeld: false,
                 id: nanoid()
             }))
     }
     
-    function rollDice() {
+    function rollDice(): void {
         if (!gameWon) {
-            setDice(oldDice => oldDice.map(die =>
+            setDice((oldDice: Dice[]): Dice[] => oldDice.map((die: Dice): Dice =>
                 die.isHeld ?
                     die :
                     { ...die, value: Math.ceil(Math.random() * 6) }
@@ -39,15 +45,15 @@ export default function App(): JSX.Element {
         }
     }
 
-    function hold(id): void {
-        setDice(oldDice => oldDice.map(die =>
+    function hold(id: string): void {
+        setDice((oldDice: Dice[]): Dice[] => oldDice.map((die: Dice): Dice =>
             die.id === id ?
                 { ...die, isHeld: !die.isHeld } :
                 die
         ))
     }
 
-    const diceElements = dice.map(dieObj => (
+    const diceElements:JSX.Element[] = dice.map((dieObj: Dice):JSX.Element => (
         <Die
             key={dieObj.id}
             value={dieObj.value}

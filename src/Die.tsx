@@ -1,11 +1,10 @@
 import type {JSX} from "react"
 
-type DieProps = {
-    key: number;
+export type DieProps = {
+    key: string;
     value: number;
     isHeld: boolean;
     hold: () => void;
-
 }
 
 export default function Die(props: DieProps) : JSX.Element{
